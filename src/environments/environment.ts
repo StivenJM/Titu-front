@@ -1,4 +1,4 @@
 export const environment = {
-  API_URL: 'http://localhost:3000/api',
-  ROOT_URL: 'http://localhost:3000',
+  API_URL: 'https://titu-back-2jaa.onrender.com/api',
+  ROOT_URL: 'https://titu-back-2jaa.onrender.com',
 };
