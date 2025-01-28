@@ -64,15 +64,20 @@ export class HeaderComponent implements OnInit {
 
   logout() {
     this.authService.logout().subscribe({
-      next: (response) => {
+      // next: (response) => {
+      //   console.log(response.message); // Muestra el mensaje de éxito
+      //   // Redirige al usuario a la inicio
+      //   this.router.navigate(['/']).then(() => {
+      //     window.location.reload();  // Recarga la página completamente
+      //   });
+      // },
+      // error: (err) => {
+      //   console.error('Error during logout:', err);
+      // }
+      
+      (response) => {
         console.log(response.message); // Muestra el mensaje de éxito
         // Redirige al usuario a la inicio
-        this.router.navigate(['/']).then(() => {
-          window.location.reload();  // Recarga la página completamente
-        });
-      },
-      error: (err) => {
-        console.error('Error during logout:', err);
       }
     });
   }
