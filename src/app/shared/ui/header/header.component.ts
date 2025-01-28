@@ -63,7 +63,7 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    this.authService.logout().subscribe({
+    this.authService.logout().subscribe(
       // next: (response) => {
       //   console.log(response.message); // Muestra el mensaje de éxito
       //   // Redirige al usuario a la inicio
@@ -79,7 +79,7 @@ export class HeaderComponent implements OnInit {
         console.log(response.message); // Muestra el mensaje de éxito
         // Redirige al usuario a la inicio
       }
-    });
+    );
   }
 
   primerLetaMayus(value: string) {
