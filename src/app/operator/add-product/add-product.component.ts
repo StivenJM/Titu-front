@@ -167,6 +167,11 @@ export class AddProductComponent {
 
     // Remueve cualquier carácter que no sea un número
     value = value.replace(/[^0-9]/g, '');
+      // Asegura que el número no sea negativo
+if (parseInt(value, 10) <= 0) {
+    value = ''; // Deja el campo vacío si es 0 o negativo
+  }
+
 
     // Actualiza el modelo y el valor del campo
     this.stock = value;

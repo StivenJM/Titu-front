@@ -251,7 +251,7 @@ export async function generarFactura(factura: any): Promise<void> {
     dibujarPieDePagina(doc);
     y = 60;
   }
-  const terms = '0987384809\ntitucorporation3@gmail.com\nFacebook: https://www.facebook.com/OnlineTitu/\nInstagram: https://www.instagram.com/titu.online/\nWhatsapp: https://chat.whatsapp.com/H9bCXEsF0Jf3icFxl2RmCm\nSitio web: ';
+  const terms = '0987384809\ntitucorporation3@gmail.com\nFacebook: https://www.facebook.com/OnlineTitu/\nInstagram: https://www.instagram.com/titu.online/\nWhatsapp: https://chat.whatsapp.com/H9bCXEsF0Jf3icFxl2RmCm\nSitio web: https://titumarket.netlify.app/ ';
   doc.text('Contacto', 14, maxYC);
   doc.setFontSize(10);
   doc.text(terms, 14, maxY, { maxWidth: 180 });

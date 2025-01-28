@@ -15,9 +15,9 @@ export class ApiService {
   private productsEndpoint = `${environment.API_URL}/catalog/products`;
   private baseUrl = environment.ROOT_URL;
   private paypalApiUrl = `${environment.API_URL}/payments/create-payment`;
-  private changePasswordApiUrl = `${environment.ROOT_URL}/operator/set-password`;
-  private changePasswordApiUrl2 = `${environment.API_URL}/admins/request-password-change`;
-  private changePasswordApiUrl3 = `${environment.API_URL}/admins/set-password`;
+  //private changePasswordApiUrl = `${environment.ROOT_URL}/operator/set-password`;
+  //private changePasswordApiUrl2 = `${environment.API_URL}/admins/request-password-change`;
+  //private changePasswordApiUrl3 = `${environment.API_URL}/admins/set-password`;
 
   constructor(private http: HttpClient) {}
 

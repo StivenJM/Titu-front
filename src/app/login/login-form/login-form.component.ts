@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http'; // Importa HttpClient para el
 import { LoginWelcomeComponent } from '../login-welcome/login-welcome.component';
 import { RegisterComponent } from '../../register/customer/register/register.component';
 import { environment } from '../../../../src/environments/environment';
+import { AuthService } from '../../shared/data-access/auth.service';
 
 @Component({
   selector: 'app-login-form',
@@ -46,7 +47,7 @@ export class LoginFormComponent {
   }
 
   //constructor para inyeccion de dependencias y hacer peticiones http
-  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {} // Inyección de HttpClient
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef, public authService: AuthService) {} // Inyección de HttpClient
 
   //metodo par alterna visibilidad de contrasenia
   togglePasswordVisibility() {
@@ -57,57 +58,75 @@ export class LoginFormComponent {
       passwordInput.type = 'password';
     }
   }
-  //metodo principal
   onSubmit() {
     // Limpia mensajes previos
     this.error = null;
     this.loginMessage = null;
-
-    // Validación básica verifica si los campos estan vacios
+  
+    // Validación básica: verifica si los campos están vacíos
     if (!this.email || !this.password) {
       this.error = 'missing-fields';
       this.loginMessage = 'Por favor, llena todos los campos.';
       this.loginSuccess = false;
       return;
     }
+  
     // Validación del formato del correo electrónico
     if (!this.validarEmail(this.email)) {
-    this.error = 'invalid-email';
-    this.loginMessage = 'El correo electrónico no tiene un formato válido.';
-    this.loginSuccess = false;
-    return;
+      this.error = 'invalid-email';
+      this.loginMessage = 'El correo electrónico no tiene un formato válido.';
+      this.loginSuccess = false;
+      return;
     }
- // Lógica de autenticación, petición al backend
- this.http
- .post(`${environment.API_URL}/login`, {
-   email: this.email,
-   password: this.password,
- }, { withCredentials: true })
- .subscribe(
-   (response: any) => {
-     // Manejo de token recibido
-     const token = response.token; // Asegúrate de que el backend envíe el token
-     if (token) {
-       //this.storeToken(token); // Almacena el token
-       this.loginSuccess = true;
-       this.userName = response.userName || '';
-       this.role = response.role || ''; // Recibir el rol
-       this.phoneNumber = response.phoneNumber || ''; // Recibir el número de teléfono
-       this.email = response.email || ''; 
-       this.showWelcome = true;
-
-       this.router.navigate(['/']);
-     } else {
-       this.error = 'token-missing';
-       this.loginMessage = 'Error: No se recibió un token del servidor.';
-     }
-   },
-   (error) => {
-     this.loginSuccess = false;
-     this.handleError(error);
-   }
- );
+  
+    // Lógica de autenticación: petición al backend
+    this.http
+      .post(`${environment.API_URL}/login`, {
+        email: this.email,
+        password: this.password,
+      }, { withCredentials: true })
+      .subscribe(
+        (response: any) => {
+          // Manejo de la respuesta
+          const token = response.token; // Asegúrate de que el backend envíe el token
+          if (token) {
+            this.loginSuccess = true;
+            this.userName = response.userName || '';
+            this.role = response.role || ''; // Recibir el rol
+            this.phoneNumber = response.phoneNumber || ''; // Recibir el número de teléfono
+            this.email = response.email || '';
+  
+            // Verificación adicional para roles específicos
+            if (this.role === 'administrador' || this.role === 'operador') {
+              this.authService.getAccessToken().subscribe(user => {
+                if (user) {
+                  // Usuario verificado correctamente
+                  this.showWelcome = true;
+                  this.router.navigate(['/operator/table-products']);
+                } else {
+                  // Error en la verificación del rol
+                  this.error = 'role-verification-failed';
+                  this.loginMessage = 'No se pudo verificar el rol del usuario.';
+                  this.loginSuccess = false;
+                }
+              });
+            } else {
+              // Si el rol no es administrador u operador
+              this.showWelcome = true;
+              this.router.navigate(['/']);
+            }
+          } else {
+            this.error = 'token-missing';
+            this.loginMessage = 'Error: No se recibió un token del servidor.';
+          }
+        },
+        (error) => {
+          this.loginSuccess = false;
+          this.handleError(error);
+        }
+      );
   }
+  
   // Almacena el token en localStorage
   private storeToken(token: string): void {
     localStorage.setItem('authToken', token);

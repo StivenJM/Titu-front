@@ -36,7 +36,12 @@ export class AuthService extends BaseHttpService {
       );
   }
 
-  
+  logout(): Observable<{ message: string }> {
+    // Llama a la ruta de logout de tu API para eliminar la cookie
+    return this.http
+    .post<{ message: string }>
+    (`${this.apiUrl}/auth/logout`, {}, { withCredentials: true });
+  }
 
   // Método para obtener los detalles completos del usuario
   getUserData(): Observable<any> {

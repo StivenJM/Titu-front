@@ -29,7 +29,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { TablaComponent } from './operator/tabla/tabla.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {CookieService} from 'ngx-cookie-service';
-
+import { AgGridAngular } from 'ag-grid-angular';
 @NgModule({
     declarations: [],  // Aquí va AppComponent y RegisterComponent
     imports: [
@@ -54,6 +54,7 @@ import {CookieService} from 'ngx-cookie-service';
         MatPaginatorModule,
         MatSortModule,
         MatButtonModule,
+        AgGridAngular
         
     ],  
     providers: [provideHttpClient(withInterceptorsFromDi()), CookieService],
