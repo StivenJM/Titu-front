@@ -28,7 +28,6 @@
     "jspdf": "^2.5.2",
     "jspdf-autotable": "^3.8.4",
     "leaflet": "^1.9.4",
-    "ng-hcaptcha": "^2.4.0",
     "ngx-cookie-service": "^19.0.0",
     "ngxtension": "^4.1.0",
     "pdfmake": "^0.2.8",
