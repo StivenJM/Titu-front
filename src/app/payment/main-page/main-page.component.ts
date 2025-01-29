@@ -31,7 +31,7 @@ export default class MainPageComponent {
   // Mensajes para mostrar en el template
   infoMessage: string | null = null;
   errorMessage: string | null = null;
-  
+
   isFormValid = false;  // Nueva propiedad para controlar la validez del formulario
 
   isMessageVisible = true; // Inicialmente el mensaje es visible
@@ -80,24 +80,13 @@ export default class MainPageComponent {
       return false;
     } else {
       this.clearError('address');
-      this.isFormValid = this.validatePostalCode();  // Verificamos si el código postal también es válido
+      this.isFormValid = true;  // Verificamos si el código postal también es válido
       return true;
     }
   }
 
   validatePostalCode(): boolean {
-    if (!this.form.postalCode) {
-      this.showError('postalCode', 'El código postal es obligatorio.');
-      return false;
-    } else if (!this.validationService.validarPostalCode(this.form.postalCode)) {
-      this.showError('postalCode', 'El código postal debe tener exactamente 6 dígitos.');
-      this.isFormValid = false;  // El formulario no es válido
-      return false;
-    } else {
-      this.clearError('postalCode');
-      this.isFormValid = true;  // El formulario es válido
-      return true;
-    }
+    return true;
   }
 
   ngOnInit() {
@@ -120,14 +109,14 @@ export default class MainPageComponent {
     setTimeout(() => {
       this.isMessageVisible = false;
     }, 10000); // 10000 milisegundos = 10 segundos
-  
+
 
     this.initializeMap();
   }
 
   async createPayment() {
     // Primero, validamos la dirección
-    if (!this.validateAddress() || !this.validatePostalCode()) {
+    if (!this.validateAddress()) {
       console.log('Dirección no válida.');
       return;
     }
@@ -195,56 +184,74 @@ export default class MainPageComponent {
     setInterval(update, 1000);
   }
 
-  initializeMap() {
-  // Crear el mapa centrado en una ubicación predeterminada
-  this.map = L.map('map').setView([0, -78.5], 13);
 
-  // Agregar una capa base utilizando OpenStreetMap
-  //L.tileLayer('https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}', {
+  initializeMap() {
+    this.map = L.map('map').setView([-0.21211062475482625, -78.49030855087082], 13);
+
     L.tileLayer('https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}', {
       maxZoom: 19,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-  }).addTo(this.map);
+    }).addTo(this.map);
 
-  // Corregir problemas de tamaño del mapa (necesario si el mapa está oculto inicialmente)
-  setTimeout(() => {
-    this.map.invalidateSize();
-  }, 0);
+    setTimeout(() => {
+      this.map.invalidateSize();
+    }, 0);
 
-    // Evento para capturar clics en el mapa
     this.map.on('click', (event: L.LeafletMouseEvent) => {
       const { lat, lng } = event.latlng;
-      this.updateMarker(lat, lng); // Actualizar el marcador en el mapa
-      this.fetchAddressFromCoordinates(lat, lng); // Obtener la dirección
+      this.updateMarker(lat, lng);
+      this.fetchAddressFromCoordinates(lat, lng);
     });
   }
 
   updateMarker(lat: number, lng: number) {
-    // Si ya existe un marcador, lo eliminamos
     if (this.marker) {
       this.map.removeLayer(this.marker);
     }
-
-    // Crear un nuevo marcador en la ubicación seleccionada
     this.marker = L.marker([lat, lng]).addTo(this.map);
   }
 
   async fetchAddressFromCoordinates(lat: number, lng: number) {
     try {
-      // Llamada a la API de OpenStreetMap para obtener la dirección
       const response = await fetch(
         `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`
       );
       const data = await response.json();
       const address = data.display_name || 'Dirección no encontrada';
-
-      // Actualizar el campo de dirección con la dirección obtenida
       this.form.address = address;
     } catch (error) {
       console.error('Error al obtener la dirección:', error);
     }
   }
 
+  async fetchCoordinatesFromAddress(address: string) {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&addressdetails=1&limit=1`
+      );
+      const data = await response.json();
+
+      if (data.length > 0) {
+        const { lat, lon } = data[0];
+        const latitude = parseFloat(lat);
+        const longitude = parseFloat(lon);
+
+        this.map.setView([latitude, longitude], 13);
+        this.updateMarker(latitude, longitude);
+
+      } else {
+        alert('Dirección no encontrada. Por favor, verifica que sea válida.');
+      }
+    } catch (error) {
+      console.error('Error al obtener las coordenadas:', error);
+    }
+  }
+
+  onAddressInputBlur() {
+    if (this.form.address) {
+      this.fetchCoordinatesFromAddress(this.form.address);
+    }
+  }
 
   onRemove(id: string) {
     this.state.remove(id);
@@ -286,11 +293,10 @@ export default class MainPageComponent {
 
     // Validamos la dirección y el código postal antes de proceder
     const isAddressValid = this.validateAddress();
-    const isPostalCodeValid = this.validatePostalCode();
 
     // Si alguno de los dos campos es inválido, mostramos el mensaje de error y detenemos la generación del PDF
-    if (!isAddressValid || !isPostalCodeValid) {
-      console.log('Dirección o código postal no válidos.');
+    if (!isAddressValid) {
+      console.log('Dirección no válidos.');
       this.showErrorMessage();  // Llamamos al método para mostrar el mensaje de error
       return;  // Detenemos el proceso de generación del PDF
     }
@@ -308,7 +314,6 @@ export default class MainPageComponent {
       email: this.correoUsuario,
       telefono: this.telefonoUsuario,
       direccion: this.form.address,
-      codigoPostal: this.form.postalCode,
       productos: productos
     };
 

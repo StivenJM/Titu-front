@@ -4,6 +4,9 @@ import { CommonModule } from '@angular/common';
 import { ApiService } from '../../conectionBF/api.service'; // Importamos el servicio de conexión a la base de datos
 import { AgGridAngular } from 'ag-grid-angular';
 import { Router } from '@angular/router';
+import { AuthService } from '../../shared/data-access/auth.service';
+import { ChangeDetectorRef } from '@angular/core';
+
 import type {
   ColDef,
   GetDetailRowDataParams,
@@ -77,14 +80,40 @@ export class TableProductsComponent {
   @Input() isDarkMode: boolean = false;
 
   product: any;
+  public userRole: string | null = null; // Almacenar el rol del usuario
 
   private gridApi!: GridApi;
 
-  constructor(private productService: ApiService, public router: Router) {}
+  constructor(
+    private productService: ApiService,
+    public router: Router,
+    private authService: AuthService, // Inyecta el servicio de autenticación
+    private cdr: ChangeDetectorRef
+  ) {}
 
 
   ngOnInit(): void {
     this.loadProducts();
+    this.getUserRole(); // Carga el rol del usuario
+  }
+
+  // Obtén el rol del usuario
+  getUserRole(): void {
+    this.authService.getAccessToken().subscribe({
+      next: (user) => {
+        this.userRole = user?.role ?? null;
+        console.log('Rol del usuario:', this.userRole); // Verifica el rol
+        this.cdr.detectChanges(); // Fuerza la detección de cambios
+      },
+      error: (err) => {
+        console.error('Error obteniendo el rol del usuario:', err);
+        this.userRole = null;
+      },
+    });
+  }
+
+  adminRedirectRouter(): void {
+    this.router.navigate(['/admin/register-panel']);
   }
 
   loadProducts(): void {

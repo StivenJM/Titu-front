@@ -28,7 +28,7 @@ export const routes: Routes = [
     { path: 'register-customer', component: RegisterComponent},
     { path: 'register-operator', component: RegisterComponentOperator},
     { path: 'register-admin', component: RegisterComponentAdmin},
-    { path: 'admin', component: Header1Component, canActivate: [roleGuard], data: { expectedRoles: ['administrador', 'operador'] }},
+    { path: 'admin/register-panel', component: Header1Component, canActivate: [roleGuard], data: { expectedRoles: ['administrador', 'operador'] }},
     { path: 'reset-password', component: ChangePasswordComponent},
     { path: 'payment-process', component: MainPageComponent},
     { path: 'login', component: LoginComponent },            // Ruta para el login

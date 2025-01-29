@@ -32,7 +32,7 @@
               <div class="form-group">
                 <label for="address" class="block text-sm font-medium text-gray-700">Dirección*</label>
                 <input type="text" placeholder="Dirección*" name="address" id="address" [(ngModel)]="form.address"
-                  (focus)="clearError('address')" (blur)="validateAddress()" required>
+                  (focus)="clearError('address')" (blur)="validateAddress()" (keyup.enter)="onAddressInputBlur()" required>
                 <span id="address-error" class="error-message" style="display:none;"></span>
               </div>
             </div>
@@ -45,28 +45,22 @@
             </div>
 
             <!-- Campo Código Postal -->
-            <div class="shipping-postal mt-4">
+            <!-- <div class="shipping-postal mt-4">
               <div class="form-group">
-                <!-- Etiqueta (Código Postal) permanece arriba -->
                 <label for="postal-code" class="block text-sm font-bold text-gray-700 mb-1">Código Postal*</label>
-
-                <!-- Contenedor para el input y el enlace -->
                 <div class="flex flex-col sm:flex-row items-start sm:items-center sm:space-x-2">
-                  <!-- Campo de Entrada -->
-                  <input type="text" id="postalCode" placeholder="Código Postal" name="postalCode" id="postalCode"
+                  <input type="text" id="postalCode" placeholder="Código Postal" name="postalCode"
                     [(ngModel)]="form.postalCode" (focus)="clearError('postalCode')" (blur)="validatePostalCode()"
-                    required style="max-width: 900px;"
+                      required style="max-width: 900px;"
                     class="w-1/4 rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                   <span id="postalCode-error" class="error-message" style="display:none;"></span>
-
-                  <!-- Hipervínculo pegado al campo -->
                   <a href="https://www.codigopostal.gob.ec/" target="_blank"
                     class="text-sm text-blue-600 underline hover:text-blue-800 mt-2 sm:mt-0">
                     Busca tu código postal aquí
                   </a>
                 </div>
               </div>
-            </div>
+            </div> -->
 
             <!-- Campo Método de Pago -->
             <div class="payment-method mt-8">

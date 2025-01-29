@@ -142,14 +142,6 @@ export async function generarFactura(factura: any): Promise<void> {
 
   doc.setFontSize(12);
   doc.setFont('helvetica', 'bold');
-  doc.text('Código Postal:', 16, 90);
-  doc.setFont('helvetica', 'normal');
-  doc.text(factura.codigoPostal, 48, 90);
-
-  
-
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'bold');
   doc.text('Forma de Pago:', 130, 70);
   doc.setFont('helvetica', 'normal');
   doc.text('PayPal', 170, 70);

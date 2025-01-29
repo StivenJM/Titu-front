@@ -31,6 +31,13 @@
         <!-- Contenedor de botones y la tabla -->
         <div class="buttonContainer">
           <a href="/operator/add-product" class="button-primary">Agregar Producto</a>
+          <!-- Botón visible solo para administradores -->
+          <button 
+            [hidden]="userRole !== 'administrador'" 
+            class="button-secondary"
+            (click)="adminRedirectRouter()">
+            Registrar Operador
+          </button>
         </div>
         
         <div class="ContenedorBusqueda">

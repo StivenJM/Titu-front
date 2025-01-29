@@ -35,6 +35,21 @@
 </head>
 <body class="bg-gray-300 font-sans min-h-screen flex flex-col">
 
+  <div class="navbar">
+    <div class="container mx-auto max-w-screen-xl p-2 flex items-center justify-between space-x-4">
+      <div class="navbar-logo">
+        <a href="/" class="flex items-center space-x-2">
+          <img width="100px" src="/img/logo5.svg" alt="Logo" />
+        </a>
+      </div>
+      <!-- Título dentro del navbar, centrado -->
+      <div class="container text-center">
+        <h2 class="text-5xl font-semibold text-black-800 mb-4">Registro de operadores</h2>
+      </div>
+
+    </div>
+  </div>
+
   <!-- Contenedor principal -->
   <div class="flex flex-col items-center justify-center flex-1 relative">
 
@@ -62,15 +77,6 @@
           <app-register-operator [isOpen]="isModalOperatorOpen" (close)="closeModalOperator()"></app-register-operator>
         </div>
       </div>
-      
-      <!-- Sección derecha: Registro del Administrador -->
-      <button class="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center w-full md:w-1/2 hover:bg-gray-200 min-h-96" (click)="openModalAdmin()">
-        <h2 class="text-5xl font-semibold mb-4 text-center">Registro del</h2>
-        <h3 class="text-5xl font-semibold mb-4 text-center">Administrador</h3>
-        <div class="w-full flex justify-center">
-          <img src="/assets/images/Admin.png" alt="Administrador" class="img">
-        </div>
-      </button>
 
       <div *ngIf="isModalAdminOpen" class="modal open">
         <div class="modal-content">
@@ -78,8 +84,7 @@
         </div>
       </div>
     </div>
-    <!-- Barra lateral de íconos (posicionada al lado derecho) -->
-    <app-sidebar></app-sidebar>
+
   </div>
 </body>
 </html>
